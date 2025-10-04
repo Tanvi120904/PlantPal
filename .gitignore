@@ -1,0 +1,25 @@
+# ----------------------------------------------------
+# 1. CRITICAL SECRETS - DO NOT COMMIT
+# ----------------------------------------------------
+# Protects your MongoDB URI and JWT_SECRET
+/plantpal-backend/.env
+
+# ----------------------------------------------------
+# 2. DEPENDENCY & BUILD FOLDERS (Backend & Frontend)
+# ----------------------------------------------------
+# Ignores ALL node_modules folders in the project
+**/node_modules
+
+# Frontend (Vite/React) build output and logs
+/PlantPal/dist
+/PlantPal/npm-debug.log*
+
+# ----------------------------------------------------
+# 3. Development/OS Files
+# ----------------------------------------------------
+# Ignores common temporary files (Vite/OS)
+*.local
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

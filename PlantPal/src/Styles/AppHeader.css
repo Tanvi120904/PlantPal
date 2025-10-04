@@ -1,0 +1,146 @@
+/* src/Styles/AppHeader.css */
+
+/* Base Navbar Styles (Ensures links display correctly) */
+.navbar-home {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 40px; 
+    background-color: #f7fff7; 
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    position: fixed; 
+    top: 0;
+    width: 100%;
+    z-index: 100;
+}
+
+.logo {
+    height: 40px; 
+}
+
+.nav-links-home {
+    list-style: none;
+    display: flex;
+    gap: 25px;
+    margin: 0;
+    padding: 0;
+    flex-grow: 1; 
+    justify-content: center;
+}
+
+.nav-links-home a {
+    text-decoration: none;
+    color: #444;
+    font-weight: 500;
+    padding: 5px 10px;
+    transition: color 0.3s;
+}
+
+.nav-links-home a:hover,
+.nav-links-home a.active {
+    color: #2e7d32; 
+    border-bottom: 2px solid #2e7d32;
+}
+
+/* --- Authentication Status Bar Styles (Top Right) --- */
+.auth-status-container {
+    display: flex;
+    align-items: center;
+    font-size: 0.95rem;
+    white-space: nowrap; 
+    margin-left: auto; 
+    min-width: 200px; 
+}
+
+/* User Dropdown Trigger */
+.user-dropdown-wrapper {
+    position: relative;
+    cursor: pointer;
+    margin-left: 20px;
+}
+
+.user-trigger {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 10px;
+    border-radius: 20px;
+    background-color: #e8f5e9; 
+    transition: background-color 0.2s;
+    user-select: none;
+}
+
+.user-trigger:hover {
+    background-color: #d4e9d4;
+}
+
+.user-avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    object-fit: cover;
+    background-color: #66bb6a;
+}
+
+.username-display {
+    color: #1b5e20;
+    font-weight: 600;
+}
+
+/* --- Dropdown Menu Content --- */
+.dropdown-menu {
+    position: absolute;
+    top: 100%; 
+    right: 0;
+    margin-top: 10px;
+    width: 180px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    z-index: 101; 
+    overflow: hidden;
+}
+
+.dropdown-item {
+    padding: 12px 15px;
+    color: #444;
+    font-size: 0.95rem;
+    transition: background-color 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.dropdown-item:hover {
+    background-color: #f0f0f0;
+}
+
+.logout-item {
+    color: #f44336; 
+    border-top: 1px solid #eee;
+}
+
+.logout-item:hover {
+    background-color: #ffebee;
+}
+
+/* Default Login/Signup buttons (when user is logged out) */
+.auth-buttons-home button {
+    border: none;
+    padding: 8px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    margin-left: 10px;
+    transition: opacity 0.3s;
+}
+
+.btn-login-home {
+    background-color: transparent;
+    color: #2e7d32;
+}
+
+.btn-signup-home {
+    background-color: #2e7d32;
+    color: white;
+}

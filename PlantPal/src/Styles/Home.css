@@ -1,0 +1,288 @@
+/* General Body and Container Styles */
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    color: #1f1f1f;
+}
+
+.home-page-container {
+    width: 100%;
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* Background Image and Hero Section Styling */
+.hero-section-home {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 0.5rem;
+    position: relative;
+    z-index: 1;
+}
+
+.home-page-container::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: url('/gg.jpeg') top center no-repeat;
+    background-size: cover;
+    opacity: 0.75;
+    z-index: -1;
+}
+
+/* Hero Content */
+.hero-content-home {
+    text-align: left;
+    max-width: 650px;
+    padding: 2rem;
+    color: #040404;
+}
+
+.headline-home {
+    font-size: 3.5rem;
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+    line-height: 1.2;
+}
+
+.subtext-home {
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+    line-height: 1.6;
+    font-weight: 400;
+    color: #151414;
+}
+
+.hero-buttons-home {
+    display: flex;
+    gap: 1rem;
+}
+
+.btn-primary-home, 
+.btn-secondary-home {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-primary-home {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.btn-secondary-home {
+    background-color: transparent;
+    color: #033705;
+    border: 2px solid #0d5d10;
+}
+
+
+.btn-secondary-home:hover {
+    background-color: #f0f0f0;
+}
+
+/* Navigation Bar */
+.navbar-home {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem 3rem;
+    background-color: #ffffff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    position: fixed;
+    width: 100%;
+    height: 7%;
+    z-index: 10;
+}
+
+.logo {
+    width: 60px;
+    height: 60px;
+    top: 10px;
+    cursor: pointer;
+}
+
+.nav-links-home {
+    list-style: none;
+    display: flex;        
+    gap: 2rem;
+    margin: 0;
+    padding: 0;
+}
+
+.nav-links-home li a {
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.nav-links-home li a:hover {
+    color: #4CAF50;
+}
+
+/* ✅ highlight active page */
+.nav-links-home li a.active {
+    color: #4CAF50;
+    font-weight: 600;
+    border-bottom: 2px solid #4CAF50;
+}
+
+/* Features Section */
+.features-section-home {
+    padding: 4rem 2rem;
+    text-align: center;
+    background-color: white;
+}
+
+.features-heading-home {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+    color: #0d5d10;
+}
+
+.features-subtext-home {
+    color: #666;
+    font-size: 1.1rem;
+    margin-bottom: 3rem;
+}
+
+.features-cards-container-home {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.feature-card-home {
+    background-color: #f9f9f9;
+    padding: 2rem;
+    border-radius: 10px;
+    max-width: 300px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease;
+}
+
+.feature-card-home:hover {
+    transform: translateY(-5px);
+}
+
+.feature-card-home h3 {
+    font-size: 1.5rem;
+    color: #4CAF50;
+}
+
+/* Testimonials Section */
+.testimonials-section-home {
+    padding: 4rem 2rem;
+    background-color: #f0f0f0;
+    text-align: center;
+}
+
+.testimonials-section-home h2 {
+    font-size: 2.5rem;
+}
+
+.testimonials-cards-container-home {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+    margin-top: 2rem;
+}
+
+.testimonial-card-home {
+    background-color: #fff;
+    padding: 2rem;
+    border-radius: 10px;
+    max-width: 400px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    font-style: italic;
+    position: relative;
+    text-align: left;
+}
+
+.testimonial-card-home p {
+    color: #555;
+    line-height: 1.6;
+}
+
+.reviewer-info-home {
+    margin-top: 1.5rem;
+    font-style: normal;
+    font-weight: bold;
+    color: #4CAF50;
+}
+
+/* Footer Styles */
+.footer-home {
+    padding: 2rem 3rem;
+    background-color: #222;
+    color: #ccc;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9rem;
+}
+
+.footer-links-home span {
+    margin-right: 1.5rem;
+}
+
+.footer-links-home span:last-child {
+    margin-right: 0;
+}
+
+/* ------------------ Auth Buttons (Top Right) ------------------ */
+/* ------------------ Auth Buttons (Top Right) ------------------ */
+.auth-buttons-home {
+    position: absolute;
+    right: 7rem;   /* distance from right edge */
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;     /* space between Login & Signup buttons */
+}
+
+.btn-login-home,
+.btn-signup-home {
+    padding: 8px 18px;
+    border-radius: 25px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+/* Login button style */
+.btn-login-home {
+    background-color: transparent;
+    border: 2px solid #4CAF50;
+    color: #4CAF50;
+}
+
+.btn-login-home:hover {
+    background-color: #4CAF50;
+    color: white;
+}
+
+/* Signup button style */
+.btn-signup-home {
+    background-color: #4CAF50;
+    color: white;
+    border: 2px solid #4CAF50;
+}
+
+.btn-signup-home:hover {
+    background-color: #388E3C;
+    border-color: #388E3C;
+}
