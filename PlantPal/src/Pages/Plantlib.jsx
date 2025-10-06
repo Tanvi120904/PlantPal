@@ -1,20 +1,29 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { NavLink, useNavigate } from "react-router-dom"; 
+import ReactDOM from "react-dom"; // 1. IMPORT ReactDOM for Portals
+import { useNavigate } from "react-router-dom"; 
 import axios from 'axios';
 import API_URL from '../config/api'; 
-import apiAuth from "../utils/apiAuth"; 
-import DeviceSetupForm from "../Components/DeviceSetupForm"; // Must exist in src/Components
+import DeviceSetupForm from "../Components/DeviceSetupForm";
 import "../Styles/Plantlib.css";
-import AppHeader from "../Components/AppHeader.jsx";
 
-// --- 1. ADD PLANT MODAL COMPONENT (Handles Setup Flow) ---
-// Note: This assumes DeviceSetupForm is fully functional and uses onSuccess prop
+// --- This helper component ensures the modal always appears on top ---
+const ModalPortal = ({ children }) => {
+    let modalRoot = document.getElementById('modal-root');
+    if (!modalRoot) {
+      modalRoot = document.createElement('div');
+      modalRoot.setAttribute('id', 'modal-root');
+      document.body.appendChild(modalRoot);
+    }
+    return ReactDOM.createPortal(children, modalRoot);
+};
+
+
+// --- Add Plant Modal Component (Handles Device Setup Flow) ---
 const AddPlantModal = ({ plant, onClose, navigate }) => {
-    
-    // Function to handle the successful registration and redirect (passed to form)
+    // This function is passed to the form to handle successful device registration
     const handleSetupSuccess = () => {
-        onClose(); // Close the modal
-        navigate('/dashboard'); // Navigate to dashboard after successful registration
+        onClose(); // Close this modal
+        navigate('/dashboard'); // Navigate to the dashboard
     };
 
     return (
@@ -22,11 +31,11 @@ const AddPlantModal = ({ plant, onClose, navigate }) => {
             <div className="add-plant-modal-content" onClick={(e) => e.stopPropagation()}>
                 <button onClick={onClose} className="add-plant-modal-close-btn">&times;</button>
                 
-                {/* Directly render the Device Setup Form */}
+                {/* Render the Device Setup Form directly */}
                 <DeviceSetupForm 
                     plantId={plant._id} 
                     plantName={plant.name}
-                    onSuccess={handleSetupSuccess} // Handler that closes and navigates
+                    onSuccess={handleSetupSuccess}
                     onClose={onClose}
                 />
             </div>
@@ -35,14 +44,15 @@ const AddPlantModal = ({ plant, onClose, navigate }) => {
 };
 
 
-// --- 2. MAIN PLANT LIBRARY COMPONENT ---
+// --- MAIN PLANT LIBRARY COMPONENT ---
 const Plantlib = () => {
     const [plants, setPlants] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [selectedPlant, setSelectedPlant] = useState(null); 
+    const [showAddModal, setShowAddModal] = useState(false);
     
-    const navigate = useNavigate(); // Initialize navigation hook
+    const navigate = useNavigate();
 
     // Filter and Pagination states
     const [searchTerm, setSearchTerm] = useState("");
@@ -51,27 +61,18 @@ const Plantlib = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const plantsPerPage = 12;
 
-    const [showAddModal, setShowAddModal] = useState(false);
-    
-    // Handles click on the '+' icon
+    // This function now safely assumes the user is logged in.
     const handleAddClick = (plant) => { 
-        // Security Check: Must be logged in to access device setup
-        if (!localStorage.getItem('userToken')) {
-            alert("Please log in first to add a device to your garden.");
-            navigate('/home'); 
-            return;
-        }
         setSelectedPlant(plant); 
         setShowAddModal(true);
     };
     
     const handleCloseModal = () => {
         setShowAddModal(false);
-        setSelectedPlant(null); // Clear selected plant on close
+        setSelectedPlant(null);
     };
 
-
-    // --- API FETCH LOGIC ---
+    // --- API Fetch Logic ---
     const fetchPlants = useCallback(async () => {
         setLoading(true);
         setError(null);
@@ -86,10 +87,10 @@ const Plantlib = () => {
         try {
             const response = await axios.get(url);
             setPlants(response.data);
-            setLoading(false);
         } catch (err) {
             console.error("API Fetch Error:", err);
-            setError("Failed to load plants. Check the Node.js server and network connection.");
+            setError("Failed to load plants. Please ensure the server is running.");
+        } finally {
             setLoading(false);
         }
     }, [careFilter, typeFilter, searchTerm]); 
@@ -99,10 +100,9 @@ const Plantlib = () => {
         setCurrentPage(1); 
     }, [fetchPlants]); 
 
-
-    // --- FILTER/PAGINATION HANDLERS ---
-    const handleCareFilter = (care) => { setCareFilter(care === careFilter ? '' : care); };
-    const handleTypeFilter = (type) => { setTypeFilter(type === typeFilter ? '' : type); };
+    // --- Filter/Pagination Handlers ---
+    const handleCareFilter = (care) => setCareFilter(care === careFilter ? '' : care);
+    const handleTypeFilter = (type) => setTypeFilter(type === typeFilter ? '' : type);
     const handleResetFilters = () => { setCareFilter(""); setTypeFilter(""); setSearchTerm(""); };
     
     const indexOfLastPlant = currentPage * plantsPerPage;
@@ -112,27 +112,20 @@ const Plantlib = () => {
 
     return (
         <div className="plant-lib-container">
-<AppHeader 
-    // These alert/navigate functions are temporary placeholders 
-    // since Plantlib doesn't control the modals directly.
-    onLoginClick={() => navigate('/home')} 
-    onSignupClick={() => navigate('/home')}
-/>
-
+            {/* 2. REMOVED AppHeader. It's handled by AuthWrapper now. */}
+            
             <div className="main-content-lib">
                 <div className="header-lib"><h1>Find Your Next Green Friend</h1></div>
+                
                 <div className="filter-and-search-container">
-                     {/* --- Search and Filter buttons UI --- */}
-                     <input type="text" placeholder="Filter plants by name..." className="search-input-lib" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+                    <input type="text" placeholder="Filter plants by name..." className="search-input-lib" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
                     <div className="filters-wrapper">
-                        {/* Filter Group 1: Care Level */}
                         <div className="filter-group">
                             <button className="filter-btn" onClick={handleResetFilters}>All</button>
                             <button className={`filter-btn-easy ${careFilter === 'Easy' ? 'active-filter' : ''}`} onClick={() => handleCareFilter("Easy")}>Easy</button>
                             <button className={`filter-btn-medium ${careFilter === 'Medium' ? 'active-filter' : ''}`} onClick={() => handleCareFilter("Medium")}>Medium</button>
                             <button className={`filter-btn-hard ${careFilter === 'Hard' ? 'active-filter' : ''}`} onClick={() => handleCareFilter("Hard")}>Hard</button>
                         </div>
-                        {/* Filter Group 2: Type */}
                         <div className="filter-group">
                             <button className={`filter-btn ${typeFilter === 'Foliage' ? 'active-filter' : ''}`} onClick={() => handleTypeFilter("Foliage")}>Foliage</button>
                             <button className={`filter-btn ${typeFilter === 'Flowering' ? 'active-filter' : ''}`} onClick={() => handleTypeFilter("Flowering")}>Flowering</button>
@@ -142,7 +135,6 @@ const Plantlib = () => {
                     </div>
                 </div>
 
-                {/* Loading and Error States */}
                 {error && <p className="error-msg">{error}</p>}
 
                 {loading ? (
@@ -156,8 +148,7 @@ const Plantlib = () => {
                                 <div key={plant._id} className="plant-card"> 
                                     <div className="plant-image-container">
                                         <img src={plant.imageUrl} alt={plant.name} className="plant-image" />
-                                        {/* CRITICAL: Passes the plant data to start setup */}
-                                        <button className="add-icon" onClick={() => handleAddClick(plant)}> + </button>
+                                        <button className="add-icon" onClick={() => handleAddClick(plant)}>+</button>
                                     </div>
                                     <div className="plant-details">
                                         <h3 className="plant-name">{plant.name}</h3>
@@ -172,7 +163,6 @@ const Plantlib = () => {
                     </div>
                 )}
                 
-                {/* Pagination */}
                 {totalPages > 1 && (
                     <div className="pagination">
                         <span className="page-link" onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}>&lt;</span>
@@ -186,13 +176,15 @@ const Plantlib = () => {
                 )}
             </div>
 
-            {/* CRITICAL: Modal rendering block */}
+            {/* 3. Render the modal inside the portal for best results */}
             {showAddModal && selectedPlant && (
-                <AddPlantModal 
-                    plant={selectedPlant} 
-                    onClose={handleCloseModal} 
-                    navigate={navigate} 
-                />
+                <ModalPortal>
+                    <AddPlantModal 
+                        plant={selectedPlant} 
+                        onClose={handleCloseModal} 
+                        navigate={navigate} 
+                    />
+                </ModalPortal>
             )}
         </div>
     );

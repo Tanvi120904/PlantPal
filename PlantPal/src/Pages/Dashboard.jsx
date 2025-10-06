@@ -1,28 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../context/UserContext.jsx'; 
 import apiAuth from '../utils/apiAuth'; 
-import AppHeader from "../Components/AppHeader.jsx"; 
 import '../Styles/Dashboard.css'; 
-
-// --- STATIC SAMPLE DATA (Shown when logged out) ---
-const samplePreviewDevices = [
-    { 
-        _id: 'sample1', 
-        deviceName: 'Monstera Deliciosa', 
-        plantType: 'Foliage', 
-        moistureLevel: 35, 
-        updatedAt: Date.now() 
-    },
-    { 
-        _id: 'sample2', 
-        deviceName: 'Snake Plant (Desk)', 
-        plantType: 'Hardy', 
-        moistureLevel: 65, 
-        updatedAt: Date.now() 
-    }
-];
-
 
 const Dashboard = () => {
     const [devices, setDevices] = useState([]); 
@@ -30,52 +10,44 @@ const Dashboard = () => {
     const [error, setError] = useState(null);
     const navigate = useNavigate();
     
-    const { user, isCheckingToken } = useUser(); 
-
-    // --- Data Fetching: Handles conditional data source ---
-    const fetchDevices = async () => {
+    // NOTE: We no longer need the 'user' object here for checks, 
+    // as AuthWrapper guarantees a user exists.
+    
+    // --- Simplified Data Fetching ---
+    const fetchDevices = useCallback(async () => {
         setLoading(true);
         setError(null);
         
-        if (user) {
-            // LOGGED IN: Fetch real data securely
-            try {
-                const response = await apiAuth.get('/dashboard/devices'); 
-                setDevices(response.data);
-            } catch (err) {
-                 if (err.response && err.response.status === 401) {
-                     localStorage.removeItem('userToken');
-                     navigate('/home'); 
-                 }
-                 setError("Failed to fetch user data.");
-                 setDevices([]);
-            }
-        } else {
-            // LOGGED OUT: Load static preview data
-            setDevices(samplePreviewDevices);
+        try {
+            // Directly fetch real data. No 'if/else' needed.
+            const response = await apiAuth.get('/dashboard/devices'); 
+            setDevices(response.data);
+        } catch (err) {
+            // Handle potential errors like token expiration
+             if (err.response && err.response.status === 401) {
+                 localStorage.removeItem('userToken'); // Clean up bad token
+                 navigate('/'); // Redirect to login
+             }
+             setError("Failed to fetch your device data.");
+             setDevices([]);
+        } finally {
+            setLoading(false);
         }
-        setLoading(false);
-    };
+    }, [navigate]); // Added navigate as a dependency
 
-    // --- Effect Hook: Runs immediately when user status changes (Fixes the refresh lag) ---
+    // --- Effect Hook: Runs once on component mount ---
     useEffect(() => {
-        // Only run fetch after the initial token check is complete
-        if (!isCheckingToken) {
-            fetchDevices();
-        }
-    }, [user, isCheckingToken, navigate]); 
+        fetchDevices();
+    }, [fetchDevices]); 
 
 
     // --- Interaction & Helpers ---
     const handleWaterNow = async (deviceId) => {
-        if (!user) {
-            alert("Please log in to control your devices.");
-            return;
-        }
+        // No user check needed here. If the user can click this, they are logged in.
         try {
             await apiAuth.post(`/dashboard/water/${deviceId}`);
             alert('Manual watering command sent!');
-            fetchDevices(); 
+            fetchDevices(); // Refresh data after watering
         } catch (error) {
             alert('Failed to send water command.');
         }
@@ -89,49 +61,40 @@ const Dashboard = () => {
 
     // --- RENDERING BLOCK ---
 
-    if (isCheckingToken) return <div className="dashboard-loading">Checking Session...</div>;
-    if (loading) return <div className="dashboard-loading">Loading Dashboard...</div>;
+    // Simplified loading/error states
+    if (loading) return <div className="dashboard-loading">Loading Your Dashboard...</div>;
     if (error) return <div className="dashboard-error">Error: {error}</div>;
 
     return (
-        <div className="dashboard-container" style={{ minHeight: '100vh' }}>
-            <AppHeader onLoginClick={() => navigate('/home')} onSignupClick={() => navigate('/home')} />
+        <div className="dashboard-container">
+            {/* The AppHeader is now correctly handled by AuthWrapper, so it's removed from here. */}
             
             <header className="dashboard-header-main">
-                {/* Title changes based on login status */}
-                <h1>{user ? 'Your Live Device Status' : 'Dashboard Preview'}</h1>
+                {/* Title is now static */}
+                <h1>Your Live Device Status</h1>
                 
-                {/* 'Add New Device' button only appears when logged in */}
-                {user && ( 
-                    <button 
-                        className="add-device-btn-header" 
-                        onClick={() => navigate('/plantlib')}
-                    >
-                        + Add New Device
-                    </button>
-                )}
+                {/* 'Add New Device' button is always shown */}
+                <button 
+                    className="add-device-btn-header" 
+                    onClick={() => navigate('/plantlib')}
+                >
+                    + Add New Device
+                </button>
             </header>
             
-            {/* Logged Out Message/Call to Action (Shown only when logged out) */}
-            {!user && (
-                <div className="call-to-action-banner">
-                    <h2>🌱 Register Now to Create Your Garden!</h2>
-                    <p>Log in or sign up to connect your devices and get personalized live monitoring data.</p>
-                </div>
-            )}
+            {/* The logged-out banner has been removed. */}
 
-
-            {devices.length === 0 && user ? (
-                // Logged In, but no devices registered yet
+            {devices.length === 0 ? (
+                // This view is shown only when a logged-in user has no devices.
                 <div className="no-devices-msg-container">
                     <p className="no-devices-msg">You have no devices registered yet. Click "+ Add New Device" to start!</p>
                 </div>
             ) : (
-                // Renders cards for either live user data OR the static sample data
+                // This grid now ONLY renders real user data.
                 <div className="device-cards-grid">
                     {devices.map(device => {
                         const status = getStatus(device.moistureLevel);
-                        const isDisabled = device.moistureLevel > 75 || !user; 
+                        const isDisabled = device.moistureLevel > 75; 
                         
                         return (
                             <div key={device._id} className="device-card-monitor">
@@ -146,7 +109,6 @@ const Dashboard = () => {
                                     </span>
                                 </div>
                                 
-                                {/* Moisture Gauge */}
                                 <div className="moisture-circle-wrapper">
                                     <div 
                                         className="moisture-circle" 
@@ -161,7 +123,7 @@ const Dashboard = () => {
                                     onClick={() => handleWaterNow(device._id)}
                                     disabled={isDisabled}
                                 >
-                                    {isDisabled ? 'DISABLED' : 'WATER NOW'}
+                                    {isDisabled ? 'WATERING DISABLED' : 'WATER NOW'}
                                 </button>
 
                                 <p className="last-check-time">

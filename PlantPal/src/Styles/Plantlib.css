@@ -10,7 +10,7 @@ body {
   width: 100%;
   position: relative;
   overflow-x: hidden;
-  padding-top: 80px; /* offset navbar */
+  padding-top: 0px; /* offset navbar */
 }
 
 /* Navbar */

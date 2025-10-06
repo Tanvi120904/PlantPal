@@ -1,57 +1,58 @@
-/* Full-page layout */
+/* --- Full-page layout --- */
 .landing-page {
   width: 100%;
-  min-height: 200vh;
+  min-height: 200vh; /* Allows for scrolling */
   position: relative;
   overflow-x: hidden;
   font-family: 'Segoe UI', sans-serif;
   color: white;
 }
 
+/* --- Background Image Overlay --- */
 .landing-page::before {
   content: "";
   position: absolute;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
+  top: 0; 
+  left: 0;
+  width: 100%; 
+  height: 100%;
   background: url('/Bg.jpeg') top center no-repeat;
   background-size: 100% auto;
   background-attachment: fixed;
   opacity: 0.8;
-  z-index: 0;
+  z-index: 0; /* Background layer */
 }
 
-/* Ensure page content is above the background */
+/* Ensure all direct children of landing-page are on top of the background */
 .landing-page > * {
   position: relative;
   z-index: 1;
 }
 
-/* Logo top-left */
+/* --- Logo (Top-Left) --- */
 .logo {
   position: fixed;
   top: 20px;
   left: 20px;
-  z-index: 50;
+  z-index: 50; /* High z-index to stay on top */
   cursor: pointer;
-
   width: 60px;
   height: 60px;
-  border-radius: 50%;   /* circular */
-  overflow: hidden;     /* crop extra parts of the image */
+  border-radius: 50%; /* Makes it circular */
+  overflow: hidden;   /* Hides parts of the image outside the circle */
 }
 
-/* Make the image fill the circular container neatly */
 .logo img {
   width: 100%;
   height: 100%;
-  display: block;       /* remove extra space below inline images */
-  object-fit: cover;    /* keeps proportions, crops to circle */
+  display: block;
+  object-fit: cover; /* Ensures the image fills the circle without distortion */
 }
 
-/* Center content */
+/* --- Centered Hero Content --- */
 .center-content {
   position: relative;
-  z-index: 40;
+  z-index: 5; /* Above background, below logo/buttons */
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -65,39 +66,58 @@
 .headline {
   font-size: 3rem;
   font-weight: 800;
-  margin-bottom: 5px;  /* tight gap before message */
+  margin-bottom: 5px;
 }
 
 .subtext {
   font-size: 1.3rem;
-  margin-bottom: 10px;  /* close to headline */
+  margin-bottom: 10px;
   line-height: 1.6;
   font-weight: 600;   
 }
 
-/* Get Started button */
-/* Get Started button */
-.get-started-btn {
-  margin-top: 45px;
-  padding: 15px 40px;
-  background-color: #0fb24b;
-  color: white;
-  border: none;
-  border-radius: 50px;
-  font-size: 1.2rem;
-  font-weight: bold;
-  cursor: pointer;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* lighter shadow */
-  transition: background-color 0.3s ease; /* no zoom effect */
+/* --- Login/Signup Buttons (Top-Right) --- */
+.auth-buttons-initial {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    display: flex;
+    gap: 10px;
+    z-index: 50; /* High z-index to stay on top, same as logo */
 }
 
-.get-started-btn:hover {
-  background-color: #0a993f;
+.btn-login-initial, 
+.btn-signup-initial {
+    padding: 10px 20px;
+    border-radius: 20px;
+    border: 1px solid #2d7c43;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
 }
 
-/* Scroll Down Arrows */
+.btn-login-initial {
+    background-color: #fff;
+    color: #2d7c43;
+}
+
+.btn-login-initial:hover {
+    background-color: #f0f0f0;
+}
+
+.btn-signup-initial {
+    background-color: #2d7c43;
+    color: #fff;
+}
+
+.btn-signup-initial:hover {
+    background-color: #256536;
+}
+
+
+/* --- Scroll Down Arrows Animation --- */
 .scroll-down-arrows {
-  margin-top: 90px; /* arrows now close to button */
+  margin-top: 90px;
   display: flex;
   flex-direction: column;
   gap: 2px 0;
@@ -110,7 +130,6 @@
   animation: bounce 1.5s infinite;
 }
 
-/* Bounce animation */
 @keyframes bounce {
   0%, 100% {
     transform: translateY(0);
@@ -120,9 +139,9 @@
   }
 }
 
-/* Features Section */
+/* --- Features Section --- */
 .features-section {
-  background: rgba(255, 255, 255, 0.9);
+  background-color: rgba(255, 255, 255, 0.9);
   color: #222;
   padding: 100px 20px;
   text-align: center;
@@ -144,7 +163,7 @@
 }
 
 .feature-card {
-  background: #fff;
+  background: #adedc3;
   padding: 30px 20px;
   border-radius: 20px;
   box-shadow: 0 8px 20px rgba(0,0,0,0.1);

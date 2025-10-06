@@ -4,6 +4,7 @@ import axios from 'axios';
 import API_URL from '../config/api'; // Path to src/config/api.js
 import '../Styles/AuthModal.css'; // Path to src/Styles/AuthModal.css
 import { useUser } from '../context/UserContext.jsx';
+
 const SignupModal = ({ isOpen, onClose, onSwitchToLogin }) => {
     // State definitions
     const [name, setName] = useState('');

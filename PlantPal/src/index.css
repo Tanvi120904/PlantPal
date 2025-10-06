@@ -2,10 +2,3 @@
 @tailwind components;
 @tailwind utilities;
 
-/* In your Global Stylesheet (e.g., index.css or main.css) */
-body {
-    margin: 0;
-    font-family: 'Segoe UI', sans-serif;
-    color: #1f1f1f;
-    /* DELETE any padding-top rule here! */
-}

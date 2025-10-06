@@ -1,14 +1,9 @@
-/* src/Styles/Dashboard.css */
-
 .dashboard-container {
     max-width: 1200px;
     margin: 0 auto;
     padding: 20px;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
-
-/* Ensure padding-top is applied to the global body or dashboard-container 
-   to clear the fixed AppHeader */
 
 .dashboard-header-main {
     display: flex;
@@ -20,12 +15,11 @@
 }
 
 .dashboard-header-main h1 {
-    color: #1b5e20; /* Primary Green */
+    color: #1b5e20;
     font-size: 2rem;
     font-weight: 700;
 }
 
-/* Add New Device Button Styling */
 .add-device-btn-header {
     background-color: #4caf50;
     color: white;
@@ -36,26 +30,11 @@
     cursor: pointer;
     transition: background-color 0.3s;
 }
+
 .add-device-btn-header:hover {
     background-color: #388e3c;
 }
 
-/* --- Call to Action Banner (When Logged Out) --- */
-.call-to-action-banner {
-    text-align: center;
-    padding: 40px;
-    margin-top: 40px;
-    background-color: #e6f4ea; /* Very light green background */
-    border-radius: 12px;
-    border: 1px solid #b2dfdb;
-}
-
-.call-to-action-banner h2 {
-    color: #1b5e20;
-    margin-bottom: 10px;
-}
-
-/* --- Device Cards Grid --- */
 .device-cards-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -97,7 +76,6 @@
     font-size: 0.9rem;
 }
 
-/* --- Status Row and Colors --- */
 .device-status {
     padding: 5px 15px;
     border-radius: 4px;
@@ -107,22 +85,10 @@
     margin-bottom: 15px;
 }
 
-.status-ok {
-    background-color: #e8f5e9; /* Light Green */
-    color: #4caf50;
-}
+.status-ok { background-color: #e8f5e9; color: #4caf50; }
+.status-warning { background-color: #fffde7; color: #ff9800; }
+.status-danger { background-color: #ffebee; color: #f44336; }
 
-.status-warning {
-    background-color: #fffde7; /* Light Yellow */
-    color: #ff9800;
-}
-
-.status-danger {
-    background-color: #ffebee; /* Light Red */
-    color: #f44336;
-}
-
-/* --- Moisture Gauge (CSS Circle Progress Bar) --- */
 .moisture-circle-wrapper {
     display: flex;
     justify-content: center;
@@ -130,7 +96,6 @@
 }
 
 .moisture-circle {
-    /* Uses radial gradient for the progress bar based on inline --value */
     --size: 130px; 
     width: var(--size);
     height: var(--size);
@@ -138,14 +103,11 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    
-    /* Dynamic background logic: Uses --value (0-100) from inline style */
     background: radial-gradient(closest-side, white 80%, transparent 81%),
                 conic-gradient(
                     #4caf50 calc(var(--value) * 1%), 
                     #eee calc(var(--value) * 1%)
                 );
-    
     font-weight: bold;
     position: relative;
 }
@@ -156,7 +118,6 @@
     z-index: 2;
 }
 
-/* --- Water Now Button --- */
 .water-now-btn {
     width: 100%;
     padding: 12px;
