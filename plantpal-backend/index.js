@@ -4,6 +4,7 @@ const dotenv = require('dotenv');
 const cors = require('cors');
 const connectDB = require('./config/db');
 const scheduleRoutes = require('./routes/schedule');
+const pestRoutes = require('./routes/pest'); // NEW IMPORT
 
 // Note: Your middleware file seems to be named 'auth.js', not 'authMiddleware.js'
 // Ensure the path is correct for your project structure.
@@ -28,6 +29,8 @@ app.use('/api/auth', authRoutes);
 app.use('/api/plants', plantRoutes); 
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/schedule', scheduleRoutes);
+app.use('/api/pest', pestRoutes); // NEW ENDPOINT
+
 
 // ✅ The test protected route has been removed from here.
 // Its logic is now correctly placed in routes/auth.js.

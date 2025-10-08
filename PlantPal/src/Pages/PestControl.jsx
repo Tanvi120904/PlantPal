@@ -1,89 +1,118 @@
-// src/pages/PestControl.jsx
-import React, { useState } from "react";
-import styles from "../Styles/PestControl.module.css"; // Import the CSS Module
+import React, { useState, useEffect } from "react"; 
+import styles from "../Styles/PestControl.module.css";
+import apiAuth from '../utils/apiAuth';
 
 function PestControl() {
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [preview, setPreview] = useState(null);
-  const [result, setResult] = useState(null);
-  const [loading, setLoading] = useState(false);
+    const [selectedFile, setSelectedFile] = useState(null);
+    const [fileName, setFileName] = useState('No file chosen');
+    const [preview, setPreview] = useState(null);
+    const [analysisResult, setAnalysisResult] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
 
-  // Handle image upload
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    
-    setSelectedFile(file);
-    setPreview(URL.createObjectURL(file));
-    setResult(null); // Clear previous results
-  };
+    useEffect(() => {
+        return () => {
+            if (preview) URL.revokeObjectURL(preview);
+        };
+    }, [preview]);
 
-  // Send image to backend for analysis
-  const handleAnalyze = async () => {
-    if (!selectedFile) return alert("Please upload a plant/leaf photo first.");
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        if (!file) {
+            setFileName('No file chosen');
+            return;
+        }
+        if (preview) URL.revokeObjectURL(preview);
 
-    const formData = new FormData();
-    formData.append("image", selectedFile);
+        setSelectedFile(file);
+        setFileName(file.name);
+        setPreview(URL.createObjectURL(file));
+        setAnalysisResult(null);
+        setError(null);
+    };
 
-    try {
-      setLoading(true);
-      setResult(null);
+    const handleAnalyze = async () => {
+        if (!selectedFile) return alert("Please upload a plant/leaf photo first.");
 
-      // 🔗 Replace with your backend endpoint
-      const response = await fetch("http://localhost:5000/analyze", {
-        method: "POST",
-        body: formData,
-      });
+        const formData = new FormData();
+        formData.append('plantImage', selectedFile);
 
-      if (!response.ok) throw new Error("Failed to analyze image");
+        try {
+            setLoading(true);
+            setAnalysisResult(null);
+            setError(null);
 
-      const data = await response.json();
-      setResult(data);
-    } catch (error) {
-      console.error("Error:", error);
-      setResult({ error: "Analysis failed. Try again later." });
-    } finally {
-      setLoading(false);
-    }
-  };
+            const response = await apiAuth.post("/pest/scan", formData, {
+                 headers: { 'Content-Type': 'multipart/form-data' },
+            });
 
-  return (
-    <div className={styles.card}>
-      <h2>Pest & Disease Detection</h2>
-      <p className={styles.descText}>
-        Upload a photo of your plant’s leaves to detect pests or early diseases.
-      </p>
+            setAnalysisResult(response.data.analysis);
+        } catch (err) {
+            console.error("Analysis Failed:", err);
+            const msg = err.response?.data?.message || "Analysis failed. Check your API key and file size.";
+            setError(msg);
+            setAnalysisResult({ error: msg });
+        } finally {
+            setLoading(false);
+        }
+    };
 
-      {/* Upload Section */}
-      <div className={styles.uploadSection}>
-        <input type="file" accept="image/*" onChange={handleFileChange} />
-        {preview && (
-          <div className={styles.imagePreview}>
-            <img src={preview} alt="Plant Preview" />
-          </div>
-        )}
-        <button className={styles.analyzeButton} onClick={handleAnalyze} disabled={loading || !selectedFile}>
-          {loading ? "Analyzing..." : "Analyze Photo"}
-        </button>
-      </div>
+    const formatResults = (text) => {
+        if (!text) return null;
+        return text.split('\n').map((line, idx) => <p key={idx}>{line}</p>);
+    };
 
-      {/* Results Section */}
-      {result && (
-        <div className={styles.resultsSection}>
-          {result.error ? (
-            <p className={styles.errorText}>{result.error}</p>
-          ) : (
-            <>
-              <h3>Analysis Results</h3>
-              <p><strong>Disease/Pest:</strong> {result.disease || "Unknown"}</p>
-              <p><strong>Confidence:</strong> {result.confidence ? `${result.confidence}%` : "N/A"}</p>
-              <p><strong>Suggestion:</strong> {result.suggestion || "No suggestion available."}</p>
-            </>
-          )}
+    return (
+        <div className={styles.container}>
+            <div className={styles.card}>
+                <h2>Pest & Disease Detection</h2>
+                <p className={styles.descText}>
+                    Upload a photo of your plant’s leaves to detect pests or early diseases.
+                </p>
+
+                <div className={styles.uploadSection}>
+                    <input 
+                        id="file-upload" 
+                        type="file" 
+                        accept="image/*" 
+                        onChange={handleFileChange} 
+                        style={{ display: 'none' }}
+                    />
+                    <label htmlFor="file-upload" className={styles.chooseButton}>
+                        Choose File
+                    </label>
+                    <span className={styles.fileName}>{fileName}</span>
+
+                    {preview && (
+                        <div className={styles.imagePreview}>
+                            <img src={preview} alt="Plant Preview" />
+                        </div>
+                    )}
+
+                    <button 
+                        className={styles.analyzeButton} 
+                        onClick={handleAnalyze} 
+                        disabled={loading || !selectedFile}
+                    >
+                        {loading ? "Analyzing..." : "Analyze Photo"}
+                    </button>
+                </div>
+
+                {analysisResult && (
+                    <div className={styles.resultsSection}>
+                        <h3>AI Diagnosis & Treatment Plan:</h3>
+                        {analysisResult.error ? (
+                            <p className={styles.errorText}>{analysisResult.error}</p>
+                        ) : (
+                            <div className={styles.analysisText}>{formatResults(analysisResult)}</div>
+                        )}
+                    </div>
+                )}
+
+                {error && <p className={styles.errorText}>{error}</p>}
+            </div>
         </div>
-      )}
-    </div>
-  );
+    );
 }
 
 export default PestControl;
