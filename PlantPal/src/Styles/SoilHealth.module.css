@@ -106,26 +106,39 @@
   font-weight: 500;
 }
 
-/* --- Progress Bar for Moisture --- */
+/* src/Styles/SoilHealth.module.css - FINAL FIX FOR MOISTURE DISPLAY */
+
+/* --- Progress Bar for Moisture (CRITICAL FIX) --- */
 .progressBarContainer {
-  width: 100%;
-  background-color: #e9ecef;
-  border-radius: 20px;
-  height: 28px;
-  margin-bottom: 1rem;
-  overflow: hidden;
+    width: 100%;
+    background-color: #e9ecef;
+    border-radius: 20px;
+    height: 28px;
+    margin-bottom: 1rem;
+    overflow: hidden;
+    position: relative; 
 }
 
 .progressBar {
-  background: linear-gradient(90deg, #66bb6a, #43a047);
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-weight: bold;
-  border-radius: 20px;
-  transition: width 0.5s ease-in-out;
+    background: linear-gradient(90deg, #66bb6a, #43a047);
+    height: 100%;
+    display: flex;
+    align-items: center;
+    
+    /* FIX: Force content (the percentage text) to align to the start/left 
+       so it's visible even when the bar width is 0-20%. */
+    justify-content: flex-start; 
+    
+    color: rgb(6, 6, 6);
+    font-weight: bold;
+    border-radius: 20px;
+    transition: width 0.5s ease-in-out;
+    
+    /* ADD: Ensure text has space and is padded from the edge */
+    padding-left: 10px; 
+    box-sizing: border-box;
+    /* Optional: Ensure text remains white for contrast */
+    text-shadow: 0 0 2px rgba(0, 0, 0, 0.4); 
 }
 
 /* --- Status Pills for Nutrients --- */

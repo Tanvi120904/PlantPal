@@ -172,5 +172,47 @@ router.post('/log-feedback', protect, async (req, res) => {
     }
 });
 
+// plantpal-backend/routes/dashboard.js (Add this after existing routes)
+
+// --------------------------------------------------------
+// ROUTE H: GET Soil Health Report
+// --------------------------------------------------------
+// @route GET /api/dashboard/soil-health/:deviceId
+// @desc Fetches detailed soil metrics for a specific device.
+// @access Private (Requires JWT)
+router.get('/soil-health/:deviceId', protect, async (req, res) => {
+    // NOTE: In a real IoT system, this data would be stored in the DB by the Arduino.
+    // For now, we return mock data based on the screenshot.
+    
+    try {
+        const device = await Device.findOne({ _id: req.params.deviceId, owner: req.user._id });
+
+        if (!device) {
+            return res.status(404).json({ message: "Device not found or not owned by user." });
+        }
+        
+        // --- Mock Data Structure (matching your screenshot) ---
+        // In a live system, this data would be read from the 'device' document.
+        const healthData = {
+            moisture: 78,
+            pH: 6.2,
+            nitrogen: "Optimal",
+            phosphorus: "Optimal",
+            potassium: "Optimal",
+            suggestions: [
+                "Ensure good sunlight exposure to help dry excess moisture.",
+                "Soil is too wet — check drainage and reduce watering."
+            ]
+        };
+
+        res.json({
+            deviceName: device.deviceName,
+            data: healthData
+        });
+
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
 
 module.exports = router;
