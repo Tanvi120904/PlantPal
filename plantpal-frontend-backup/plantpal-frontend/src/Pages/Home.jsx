@@ -1,0 +1,138 @@
+import React, { useState } from "react";
+import { motion } from "framer-motion";
+import { NavLink } from "react-router-dom";
+import '../Styles/Home.css';
+import SignupModal from "../Components/SignupModal.jsx";
+import LoginModal from "../Components/LoginModal.jsx";
+
+function Home() {
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+
+    return (
+        <div className="home-page-container">
+            {/* Navigation Bar */}
+            <nav className="navbar-home">
+                <div className="navbar-left">
+                    <img
+                        src="/Main.png"
+                        alt="PlantPal Logo"
+                        className="logo"
+                    />
+                </div>
+                <ul className="nav-links-home">
+                    <li><NavLink to="/home" className={({ isActive }) => isActive ? "active" : ""}>Home</NavLink></li>
+                    <li><NavLink to="/plantlib" className={({ isActive }) => isActive ? "active" : ""}>Plant Library</NavLink></li>
+                    <li><NavLink to="/features" className={({ isActive }) => isActive ? "active" : ""}>Features</NavLink></li>
+                    <li><NavLink to="/dashboard" className={({ isActive }) => isActive ? "active" : ""}>Dashboard</NavLink></li>
+                    <li><NavLink to="/urbangrow" className={({ isActive }) => isActive ? "active" : ""}>UrbanGrow</NavLink></li>
+                </ul>
+            </nav>
+
+            {/* Main Hero Section */}
+            <div className="hero-section-home">
+                <div className="hero-content-home">
+                    <motion.h1
+                        className="headline-home"
+                        initial={{ opacity: 0, y: 40 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 1 }}
+                    >
+                        Your Green Journey Starts Here
+                    </motion.h1>
+                    <motion.p
+                        className="subtext-home"
+                        initial={{ opacity: 0, y: 15 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 1, delay: 0.4 }}
+                    >
+                        PlantPal simplifies plant care with smart monitoring, personalized tips, and a vibrant community. Grow happier, healthier plants effortlessly.
+                    </motion.p>
+                    <div className="hero-buttons-home">
+                        <NavLink to="/Plantlib">
+                            <button className="btn-primary-home">
+                                Explore Plant Library
+                            </button>
+                        </NavLink>
+                        <NavLink to="/dashboard">
+                            <button className="btn-secondary-home">
+                                See Diagnostics
+                            </button>
+                        </NavLink>
+                    </div>
+                </div>
+            </div>
+
+            {/* Features Section */}
+            <div className="features-section-home">
+                <h2 className="features-heading-home">Discover PlantPal's Core Features</h2>
+                <p className="features-subtext-home">PlantPal simplifies plant care with innovative tools designed for every gardener.</p>
+                <div className="features-cards-container-home">
+                    <div className="feature-card-home">
+                        <h3>Smart Watering System</h3>
+                        <p>Automatically schedules and delivers the perfect amount of water, so your plants are always hydrated without the guesswork.</p>
+                    </div>
+                    <div className="feature-card-home">
+                        <h3>Soil Health Monitoring</h3>
+                        <p>Get real-time data on your soil's moisture and nutrient levels to ensure your plants have the ideal environment to thrive.</p>
+                    </div>
+                    <div className="feature-card-home">
+                        <h3>Pest Patrol & Early Warning 🚨</h3>
+                        <p>The Pest Patrol feature uses AI to identify pests from photos and provides a quick, step-by-step treatment plan to protect your plants.</p>
+                    </div>
+                </div>
+            </div>
+
+            {/* Community Testimonials Section */}
+            <div className="testimonials-section-home">
+                <div className="testimonials-header-home">
+                    <h2>What Our Community Says</h2>
+                    <p>Hear from passionate gardeners who transformed their plant care with PlantPal.</p>
+                </div>
+                <div className="testimonials-cards-container-home">
+                    <div className="testimonial-card-home">
+                        <p>"PlantPal has transformed my approach to gardening! My plants have never looked healthier, and the care reminders are a lifesaver."</p>
+                        <div className="reviewer-info-home">
+                            <span className="reviewer-name-home">David L</span>
+                        </div>
+                    </div>
+                    <div className="testimonial-card-home">
+                        <p>"The plant library is incredibly detailed, and the community support is fantastic! I've learned so much about my tricky orchids."</p>
+                        <div className="reviewer-info-home">
+                            <span className="reviewer-name-home">Emily R.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* Footer Section */}
+            <footer className="footer-home">
+                <div className="footer-links-home">
+                    <span>PlantPal</span>
+                    <span>Resources</span>
+                    <span>Legal</span>
+                </div>
+            </footer>
+
+            {/* Modals */}
+            <LoginModal
+                isOpen={isLoginModalOpen}
+                onClose={() => setIsLoginModalOpen(false)}
+                onSwitchToSignup={() => {
+                    setIsLoginModalOpen(false);
+                    setIsModalOpen(true);
+                }}
+            />
+            <SignupModal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                onSwitchToLogin={() => {
+                    setIsModalOpen(false);
+                    setIsLoginModalOpen(true);
+                }}
+            />
+        </div>
+    );
+}
+
+export default Home;

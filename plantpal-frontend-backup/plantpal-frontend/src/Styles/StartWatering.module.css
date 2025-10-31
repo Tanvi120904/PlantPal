@@ -1,0 +1,151 @@
+/* src/Styles/StartWatering.module.css */
+
+/* --- Main Card & Layout --- */
+.card {
+  width: 100%;
+  box-sizing: border-box;
+  background-color: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  margin-bottom: 1.5rem;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.header h2 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+/* --- Form & Inputs --- */
+.formContainer {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.formContainer input,
+.formContainer select {
+  flex: 1; /* Makes the inputs expand to fill space */
+  padding: 0.8rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+}
+
+/* --- Buttons --- */
+.descriptionButton {
+  background: #4caf50;
+  color: white;
+  border: none;
+  padding: 0.6rem 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.addScheduleButton {
+  background: #0d5d10;
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 25px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.saveButton {
+  background: #e6ef2a;
+  color: rgb(0, 0, 0);
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.saveButton:hover {
+  background: #a5b400;
+}
+.saveWrapper {
+  text-align: right; 
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+/* --- Schedule List Section --- */
+.scheduleList p {
+  padding: 0 0.5rem 1rem 0.5rem;
+}
+
+.scheduleCard {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: white;
+  padding: 1rem;
+  border-radius: 10px;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.scheduleInfo h3 {
+  margin: 0;
+  color: #0d5d10;
+}
+
+.scheduleInfo p {
+  margin: 0;
+  color: #555;
+}
+
+.scheduleActions button {
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  border: none;
+  margin-left: 0.5rem;
+  cursor: pointer;
+}
+
+/* ✅ Added button styles */
+.enabled {
+  background: #0d5d10;
+  color: white;
+}
+
+.disabled {
+  background: #ccc;
+  color: #333;
+}
+
+.deleteButton {
+  background: #e53935;
+  color: white;
+}
+
+.editButton {
+  background: #2196f3;
+  color: white;
+}
+
+/* --- Calendar --- */
+.calendarView h2 {
+  margin-bottom: 1rem;
+}
+
+.calendarPlaceholder {
+  padding: 2rem;
+  border: 2px dashed #ccc;
+  border-radius: 10px;
+  font-size: 16px;
+  color: #777;
+  text-align: center;
+}
+

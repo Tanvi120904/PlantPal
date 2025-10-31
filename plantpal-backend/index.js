@@ -40,6 +40,35 @@ app.get('/', (req, res) => {
     res.send('PlantPal API is running successfully.');
 });
 
-// --- 7. START SERVER ---
+// --- 7. START SERVER WITH SOCKET.IO ---
+const http = require('http');
+const { Server } = require('socket.io');
+
+const server = http.createServer(app);
+
+const io = new Server(server, {
+  cors: {
+    origin: "http://localhost:5173", // your React app URL
+    methods: ["GET", "POST"],
+  },
+});
+
+
+// --- 8. SOCKET.IO EVENTS ---
+io.on("connection", (socket) => {
+  console.log("🟢 Client connected:", socket.id);
+
+  // Example mock data event
+  socket.emit("sensor:update", {
+    moisture: Math.floor(Math.random() * 100),
+    pump: false,
+  });
+
+  socket.on("disconnect", () => {
+    console.log("🔴 Client disconnected:", socket.id);
+  });
+});
+
+// --- 9. RUN SERVER ---
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, console.log(`Server running on port ${PORT}`));
+server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
